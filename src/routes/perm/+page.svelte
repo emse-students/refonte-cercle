@@ -5,9 +5,11 @@
 <div class="container">
 	{#if data.perm}
 		<h1>{data.perm.nom}</h1>
-		
+
 		<div class="info-box">
-			<p class="total-sales">Total des ventes : <strong>{data.perm.total_vente.toFixed(2)} €</strong></p>
+			<p class="total-sales">
+				Total des ventes : <strong>{data.perm.total_vente.toFixed(2)} €</strong>
+			</p>
 			<p>Date : {new Date(data.perm.datee * 1000).toLocaleDateString()}</p>
 		</div>
 
@@ -15,7 +17,7 @@
 			<a href="/perm/open" class="btn btn-config">
 				<span>⚙️</span> Modifier la perm
 			</a>
-			
+
 			<a href="/perm/bilan" class="btn btn-bilan">
 				<span>📊</span> Bilan des perms
 			</a>
@@ -57,7 +59,7 @@
 		padding: 2rem;
 		border-radius: 8px;
 		margin: 2rem 0;
-		box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	}
 	.total-sales {
 		font-size: 1.5rem;
@@ -87,10 +89,18 @@
 	.btn:hover {
 		transform: translateY(-2px);
 	}
-	.btn-config { background-color: #6c757d; }
-	.btn-bilan { background-color: #17a2b8; }
-	.btn-pos { background-color: #28a745; }
-	.btn-primary { background-color: #007bff; }
+	.btn-config {
+		background-color: #6c757d;
+	}
+	.btn-bilan {
+		background-color: #17a2b8;
+	}
+	.btn-pos {
+		background-color: #28a745;
+	}
+	.btn-primary {
+		background-color: #007bff;
+	}
 
 	.history-grid {
 		display: grid;

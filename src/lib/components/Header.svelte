@@ -51,11 +51,13 @@
 		margin: 0;
 		padding: 0;
 	}
-	nav a, .username {
+	nav a,
+	.username {
 		color: #ddd;
 		text-decoration: none;
 	}
-	nav a:hover, .username:hover {
+	nav a:hover,
+	.username:hover {
 		color: white;
 	}
 	.auth {

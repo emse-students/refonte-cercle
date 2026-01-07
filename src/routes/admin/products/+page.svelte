@@ -8,8 +8,12 @@
 	<h1>Manage Products</h1>
 
 	<div class="tabs">
-		<button class:active={activeTab === 'drinks'} onclick={() => activeTab = 'drinks'}>Drinks</button>
-		<button class:active={activeTab === 'snacks'} onclick={() => activeTab = 'snacks'}>Snacks</button>
+		<button class:active={activeTab === 'drinks'} onclick={() => (activeTab = 'drinks')}
+			>Drinks</button
+		>
+		<button class:active={activeTab === 'snacks'} onclick={() => (activeTab = 'snacks')}
+			>Snacks</button
+		>
 	</div>
 
 	<table>
@@ -31,7 +35,13 @@
 							<form method="POST" action="?/updatePrice" use:enhance>
 								<input type="hidden" name="id" value={item.id} />
 								<input type="hidden" name="type" value="B" />
-								<input type="number" step="0.01" name="price" value={item.prix_vente} class="price-input" />
+								<input
+									type="number"
+									step="0.01"
+									name="price"
+									value={item.prix_vente}
+									class="price-input"
+								/>
 								<button type="submit" class="btn-save">Save</button>
 							</form>
 						</td>
@@ -49,7 +59,13 @@
 							<form method="POST" action="?/updatePrice" use:enhance>
 								<input type="hidden" name="id" value={item.id} />
 								<input type="hidden" name="type" value="C" />
-								<input type="number" step="0.01" name="price" value={item.prix_vente} class="price-input" />
+								<input
+									type="number"
+									step="0.01"
+									name="price"
+									value={item.prix_vente}
+									class="price-input"
+								/>
 								<button type="submit" class="btn-save">Save</button>
 							</form>
 						</td>
@@ -88,7 +104,8 @@
 		width: 100%;
 		border-collapse: collapse;
 	}
-	th, td {
+	th,
+	td {
 		padding: 0.75rem;
 		border-bottom: 1px solid #ddd;
 		text-align: left;

@@ -1,36 +1,35 @@
 import { error } from '@sveltejs/kit';
-import { query } from '$lib/server/db';
+import { getPool } from '$lib/server/db';
 
 export const load = async ({ locals, url }) => {
-	const session = await locals.auth();
-	if (!session?.user) {
+	if (!locals?.user) {
 		throw error(403, 'Unauthorized');
 	}
 
 	const idParam = url.searchParams.get('id');
-	let targetUserId = idParam ? parseInt(idParam) : session.user.id;
+	let targetUserId = idParam ? parseInt(idParam) : locals.user.id;
 
 	// If trying to view another user's account, check permissions
-	if (targetUserId !== session.user.id) {
-		if (session.user.droit !== 'cercle' && session.user.droit !== 'cercleux') {
+	if (targetUserId !== locals.user.id) {
+		if (locals.user.droit !== 'cercle' && locals.user.droit !== 'cercleux') {
 			throw error(403, 'Unauthorized');
 		}
 	}
-	
+
 	// If id=0 and admin, show global history (PHP logic)
 	// But here let's stick to user history or specific user history.
 	// If the user wants global history, maybe that's a different view or handled by id=0.
 	// The PHP code uses id=0 for global history.
-	
+
 	let transactions = [];
 	let targetUser = null;
 
 	if (targetUserId === 0) {
-		if (session.user.droit !== 'cercle' && session.user.droit !== 'cercleux') {
+		if (locals.user.droit !== 'cercle' && locals.user.droit !== 'cercleux') {
 			throw error(403, 'Unauthorized');
 		}
 		// Global history
-		transactions = await query(`
+		transactions = (await getPool().query(`
 			SELECT 
 				t.id, t.datee, t.nb, t.prix, t.B_C_A, t.id_B_C,
 				u.prenom, u.nom, u.login,
@@ -47,16 +46,20 @@ export const load = async ({ locals, url }) => {
 			LEFT JOIN nom_perm np ON p.id_nom_perm = np.id
 			ORDER BY t.datee DESC
 			LIMIT 50
-		`) as any[];
+		`)) as any[];
 	} else {
 		// Specific user history
-		const userRes = await query('SELECT id_user as id, nom, prenom, login, solde, promo, droit FROM user WHERE id_user = ?', [targetUserId]) as any[];
+		const userRes = (await getPool().query(
+			'SELECT id_user as id, nom, prenom, login, solde, promo, droit FROM user WHERE id_user = ?',
+			[targetUserId]
+		)) as any[];
 		if (userRes.length === 0) {
 			throw error(404, 'User not found');
 		}
 		targetUser = userRes[0];
 
-		transactions = await query(`
+		transactions = (await getPool().query(
+			`
 			SELECT 
 				t.id, t.datee, t.nb, t.prix, t.B_C_A, t.id_B_C,
 				np.nom as perm_nom,
@@ -72,11 +75,13 @@ export const load = async ({ locals, url }) => {
 			WHERE t.id_debiteur = ?
 			ORDER BY t.datee DESC
 			LIMIT 50
-		`, [targetUserId]) as any[];
+		`,
+			[targetUserId]
+		)) as any[];
 	}
 
 	return {
-		transactions: transactions.map(t => ({
+		transactions: transactions.map((t) => ({
 			...t,
 			date: new Date(t.datee * 1000)
 		})),

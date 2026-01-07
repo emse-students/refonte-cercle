@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	
+
 	let { data, form } = $props();
 
 	let searchQuery = $state('');
@@ -10,13 +10,17 @@
 
 	// Filter users
 	let filteredUsers = $derived(
-		searchQuery.length > 1 
-			? data.users.filter(u => u.name.toLowerCase().includes(searchQuery.toLowerCase()) || u.login.includes(searchQuery))
+		searchQuery.length > 1
+			? data.users.filter(
+					(u) =>
+						u.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+						u.login.includes(searchQuery)
+				)
 			: []
 	);
 
 	function addToCart(item: any) {
-		const existing = cart.find(i => i.id === item.id && i.type === item.type);
+		const existing = cart.find((i) => i.id === item.id && i.type === item.type);
 		if (existing) {
 			existing.quantity++;
 		} else {
@@ -32,7 +36,7 @@
 		cart = [...cart];
 	}
 
-	let total = $derived(cart.reduce((sum, item) => sum + (item.price * item.quantity), 0));
+	let total = $derived(cart.reduce((sum, item) => sum + item.price * item.quantity, 0));
 
 	function selectUser(user: any) {
 		selectedUser = user;
@@ -48,8 +52,12 @@
 <div class="pos-container">
 	<div class="products-section">
 		<div class="tabs">
-			<button class:active={activeTab === 'drinks'} onclick={() => activeTab = 'drinks'}>Drinks</button>
-			<button class:active={activeTab === 'snacks'} onclick={() => activeTab = 'snacks'}>Snacks</button>
+			<button class:active={activeTab === 'drinks'} onclick={() => (activeTab = 'drinks')}
+				>Drinks</button
+			>
+			<button class:active={activeTab === 'snacks'} onclick={() => (activeTab = 'snacks')}
+				>Snacks</button
+			>
 		</div>
 
 		<div class="product-grid">
@@ -81,12 +89,12 @@
 				<div class="selected-user">
 					<h3>Customer: {selectedUser.name}</h3>
 					<p>Balance: {selectedUser.solde.toFixed(2)} €</p>
-					<button class="btn-small" onclick={() => selectedUser = null}>Change</button>
+					<button class="btn-small" onclick={() => (selectedUser = null)}>Change</button>
 				</div>
 			{:else}
-				<input 
-					type="text" 
-					placeholder="Search user..." 
+				<input
+					type="text"
+					placeholder="Search user..."
 					bind:value={searchQuery}
 					class="search-input"
 				/>
@@ -125,9 +133,9 @@
 			<h3>Total: {total.toFixed(2)} €</h3>
 		</div>
 
-		<form 
-			method="POST" 
-			action="?/transaction" 
+		<form
+			method="POST"
+			action="?/transaction"
 			use:enhance={() => {
 				return async ({ result }) => {
 					if (result.type === 'success') {
@@ -141,19 +149,21 @@
 		>
 			<input type="hidden" name="userId" value={selectedUser?.id_user} />
 			<input type="hidden" name="permId" value={data.perm.id} />
-			<input type="hidden" name="cart" value={JSON.stringify(cart.map(i => ({
-				id: i.id,
-				type: i.type,
-				price: i.price,
-				quantity: i.quantity,
-				volume: i.volume
-			})))} />
+			<input
+				type="hidden"
+				name="cart"
+				value={JSON.stringify(
+					cart.map((i) => ({
+						id: i.id,
+						type: i.type,
+						price: i.price,
+						quantity: i.quantity,
+						volume: i.volume
+					}))
+				)}
+			/>
 
-			<button 
-				type="submit" 
-				class="btn-pay" 
-				disabled={!selectedUser || cart.length === 0}
-			>
+			<button type="submit" class="btn-pay" disabled={!selectedUser || cart.length === 0}>
 				PAY
 			</button>
 		</form>

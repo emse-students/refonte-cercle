@@ -7,10 +7,12 @@ export const load = async ({ locals }) => {
 	}
 
 	// Fetch all users for the search autocomplete
-	const users = await getPool().query('SELECT id_user, prenom, nom, solde, login FROM user WHERE droit <> "aucun" ORDER BY nom ASC') as any[];
+	const users = (await getPool().query(
+		'SELECT id_user, prenom, nom, solde, login FROM user WHERE droit <> "aucun" ORDER BY nom ASC'
+	)) as any[];
 
 	return {
-		users: users.map(u => ({ ...u, name: `${u.prenom} ${u.nom}` }))
+		users: users.map((u) => ({ ...u, name: `${u.prenom} ${u.nom}` }))
 	};
 };
 
@@ -44,10 +46,10 @@ export const actions = {
 			);
 
 			// Update User Balance
-			await connection.execute(
-				'UPDATE user SET solde = solde + ? WHERE id_user = ?',
-				[amount, userId]
-			);
+			await connection.execute('UPDATE user SET solde = solde + ? WHERE id_user = ?', [
+				amount,
+				userId
+			]);
 
 			await connection.commit();
 		} catch (e) {

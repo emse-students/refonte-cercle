@@ -1,4 +1,4 @@
-import type { Session } from "@auth/core/types";
+import type { Session } from '@auth/core/types';
 
 // See https://svelte.dev/docs/kit/types#app.d.ts
 // for information about these interfaces

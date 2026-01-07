@@ -1,23 +1,23 @@
-import { SvelteKitAuth } from "@auth/sveltekit";
-import { env } from "$env/dynamic/private";
-import db from "$lib/server/db";
+import { SvelteKitAuth } from '@auth/sveltekit';
+import { env } from '$env/dynamic/private';
+import db from '$lib/server/db';
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
 	providers: [
 		{
-			id: "cas-emse", // signIn("my-provider") and will be part of the callback URL
-			name: "CAS EMSE", // optional, used on the default login page as the button text.
-			type: "oidc", // or "oauth" for OAuth 2 providers
-			issuer: "https://cas.emse.fr/cas/oidc", // to infer the .well-known/openid-configuration URL
+			id: 'cas-emse', // signIn("my-provider") and will be part of the callback URL
+			name: 'CAS EMSE', // optional, used on the default login page as the button text.
+			type: 'oidc', // or "oauth" for OAuth 2 providers
+			issuer: 'https://cas.emse.fr/cas/oidc', // to infer the .well-known/openid-configuration URL
 			clientId: env.AUTH_CLIENT_ID, // from the provider's dashboard
 			clientSecret: env.AUTH_CLIENT_SECRET, // from the provider's dashboard
 			authorization: {
-				scope: "openid profile email",
-			},
-		},
+				scope: 'openid profile email'
+			}
+		}
 	],
 	trustHost: true,
-	secret: env.AUTH_SECRET ?? "default-secret-change-me",
+	secret: env.AUTH_SECRET ?? 'default-secret-change-me',
 	callbacks: {
 		async jwt({ token, user, profile }) {
 			// Initial sign in
@@ -33,6 +33,6 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 				session.user.email = token.email as string;
 			}
 			return session;
-		},
-	},
+		}
+	}
 });

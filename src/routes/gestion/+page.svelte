@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	
+
 	let { data } = $props();
-	
+
 	let activeSection = $state<string | null>(null);
-	
+
 	function toggle(section: string) {
 		if (activeSection === section) {
 			activeSection = null;
@@ -25,19 +25,20 @@
 
 	// Derived
 	let filteredBoissons = $derived(
-		data.contenus.filter(c => c.nom.toLowerCase().includes(boissonSearch.toLowerCase()))
+		data.contenus.filter((c) => c.nom.toLowerCase().includes(boissonSearch.toLowerCase()))
 	);
 
 	let filteredUsers = $derived(
-		data.users.filter(u => 
-			(u.nom?.toLowerCase().includes(compteSearch.toLowerCase()) || 
-			 u.prenom?.toLowerCase().includes(compteSearch.toLowerCase()) ||
-			 u.login?.toLowerCase().includes(compteSearch.toLowerCase()))
+		data.users.filter(
+			(u) =>
+				u.nom?.toLowerCase().includes(compteSearch.toLowerCase()) ||
+				u.prenom?.toLowerCase().includes(compteSearch.toLowerCase()) ||
+				u.login?.toLowerCase().includes(compteSearch.toLowerCase())
 		)
 	);
 
 	let filteredPerms = $derived(
-		data.perms.filter(p => p.nom.toLowerCase().includes(permSearch.toLowerCase()))
+		data.perms.filter((p) => p.nom.toLowerCase().includes(permSearch.toLowerCase()))
 	);
 
 	function formatPrice(price: number) {
@@ -47,11 +48,14 @@
 
 <div class="page">
 	<h1>Gestion</h1>
-	
+
 	<div class="center-container">
-		
 		<!-- Boissons -->
-		<div class="accordion" class:active={activeSection === 'boissons'} onclick={() => toggle('boissons')}>
+		<div
+			class="accordion"
+			class:active={activeSection === 'boissons'}
+			onclick={() => toggle('boissons')}
+		>
 			<div class="icon">{activeSection === 'boissons' ? '▼' : '▶'}</div>
 			<div class="title">Boissons</div>
 		</div>
@@ -60,11 +64,21 @@
 				<div class="form-row">
 					<label>Nom de la boisson :</label>
 					<div class="search-container">
-						<input type="text" placeholder="Taper le nom d'une boisson" bind:value={boissonSearch} />
+						<input
+							type="text"
+							placeholder="Taper le nom d'une boisson"
+							bind:value={boissonSearch}
+						/>
 						{#if boissonSearch && !selectedBoisson}
 							<div class="autocomplete">
 								{#each filteredBoissons as item}
-									<div class="autocomplete-item" onclick={() => { selectedBoisson = item; boissonSearch = ''; }}>
+									<div
+										class="autocomplete-item"
+										onclick={() => {
+											selectedBoisson = item;
+											boissonSearch = '';
+										}}
+									>
 										{item.nom}
 									</div>
 								{/each}
@@ -84,7 +98,7 @@
 							<label>Degré:</label>
 							<span>{selectedBoisson.degre}°</span>
 						</div>
-						
+
 						<h3>Contenants</h3>
 						{#each selectedBoisson.contenants as contenant}
 							<div class="contenant-row">
@@ -92,15 +106,19 @@
 								<span>{formatPrice(contenant.prix_vente)}</span>
 							</div>
 						{/each}
-						
-						<button onclick={() => selectedBoisson = null}>Fermer</button>
+
+						<button onclick={() => (selectedBoisson = null)}>Fermer</button>
 					</div>
 				{/if}
 			</div>
 		{/if}
 
 		<!-- Contenants -->
-		<div class="accordion" class:active={activeSection === 'contenants'} onclick={() => toggle('contenants')}>
+		<div
+			class="accordion"
+			class:active={activeSection === 'contenants'}
+			onclick={() => toggle('contenants')}
+		>
 			<div class="icon">{activeSection === 'contenants' ? '▼' : '▶'}</div>
 			<div class="title">Contenants</div>
 		</div>
@@ -124,7 +142,11 @@
 		{/if}
 
 		<!-- Comptes -->
-		<div class="accordion" class:active={activeSection === 'comptes'} onclick={() => toggle('comptes')}>
+		<div
+			class="accordion"
+			class:active={activeSection === 'comptes'}
+			onclick={() => toggle('comptes')}
+		>
 			<div class="icon">{activeSection === 'comptes' ? '▼' : '▶'}</div>
 			<div class="title">Comptes</div>
 		</div>
@@ -134,7 +156,7 @@
 					<label>Recherche :</label>
 					<input type="text" bind:value={compteSearch} />
 				</div>
-				
+
 				<table class="users-table">
 					<thead>
 						<tr>
@@ -191,7 +213,11 @@
 		{/if}
 
 		<!-- Constantes -->
-		<div class="accordion" class:active={activeSection === 'constantes'} onclick={() => toggle('constantes')}>
+		<div
+			class="accordion"
+			class:active={activeSection === 'constantes'}
+			onclick={() => toggle('constantes')}
+		>
 			<div class="icon">{activeSection === 'constantes' ? '▼' : '▶'}</div>
 			<div class="title">Constantes</div>
 		</div>
@@ -208,7 +234,11 @@
 		{/if}
 
 		<!-- Nouvelle Perm (Team) -->
-		<div class="accordion" class:active={activeSection === 'new_perm'} onclick={() => toggle('new_perm')}>
+		<div
+			class="accordion"
+			class:active={activeSection === 'new_perm'}
+			onclick={() => toggle('new_perm')}
+		>
 			<div class="icon">{activeSection === 'new_perm' ? '▼' : '▶'}</div>
 			<div class="title">Nouvelle perm (Équipe)</div>
 		</div>
@@ -225,7 +255,11 @@
 		{/if}
 
 		<!-- Nouveau Compte -->
-		<div class="accordion" class:active={activeSection === 'new_user'} onclick={() => toggle('new_user')}>
+		<div
+			class="accordion"
+			class:active={activeSection === 'new_user'}
+			onclick={() => toggle('new_user')}
+		>
 			<div class="icon">{activeSection === 'new_user' ? '▼' : '▶'}</div>
 			<div class="title">Nouveau compte</div>
 		</div>
@@ -236,10 +270,11 @@
 					<input type="text" bind:value={newUserSearch} placeholder="Rechercher..." />
 				</div>
 				<!-- This would need a search against all users or an external directory -->
-				<p>Pour créer un compte, l'utilisateur doit s'être connecté au moins une fois via le CAS.</p>
+				<p>
+					Pour créer un compte, l'utilisateur doit s'être connecté au moins une fois via le CAS.
+				</p>
 			</div>
 		{/if}
-
 	</div>
 </div>
 
@@ -249,7 +284,7 @@
 		max-width: 1000px;
 		margin: 0 auto;
 	}
-	
+
 	.accordion {
 		background: #eee;
 		padding: 15px;
@@ -260,19 +295,19 @@
 		border-radius: 5px;
 		user-select: none;
 	}
-	
+
 	.accordion.active {
 		background: #ddd;
 		border-bottom-left-radius: 0;
 		border-bottom-right-radius: 0;
 	}
-	
+
 	.icon {
 		margin-right: 10px;
 		width: 20px;
 		text-align: center;
 	}
-	
+
 	.screen {
 		border: 1px solid #ddd;
 		border-top: none;
@@ -282,19 +317,19 @@
 		border-bottom-left-radius: 5px;
 		border-bottom-right-radius: 5px;
 	}
-	
+
 	.form-row {
 		margin-bottom: 15px;
 		display: flex;
 		align-items: center;
 		gap: 10px;
 	}
-	
+
 	.search-container {
 		position: relative;
 		flex-grow: 1;
 	}
-	
+
 	.autocomplete {
 		position: absolute;
 		top: 100%;
@@ -306,31 +341,32 @@
 		overflow-y: auto;
 		z-index: 10;
 	}
-	
+
 	.autocomplete-item {
 		padding: 10px;
 		cursor: pointer;
 	}
-	
+
 	.autocomplete-item:hover {
 		background: #f0f0f0;
 	}
-	
+
 	.users-table {
 		width: 100%;
 		border-collapse: collapse;
 	}
-	
-	.users-table th, .users-table td {
+
+	.users-table th,
+	.users-table td {
 		padding: 10px;
 		text-align: left;
 		border-bottom: 1px solid #eee;
 	}
-	
+
 	.negative {
 		color: red;
 	}
-	
+
 	.list-item {
 		padding: 10px;
 		border-bottom: 1px solid #eee;
@@ -338,14 +374,14 @@
 		align-items: center;
 		gap: 10px;
 	}
-	
+
 	.tag {
 		background: #e0e0e0;
 		padding: 2px 6px;
 		border-radius: 4px;
 		font-size: 0.9em;
 	}
-	
+
 	button {
 		padding: 5px 10px;
 		cursor: pointer;

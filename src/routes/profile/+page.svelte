@@ -54,7 +54,7 @@
 		border-radius: 8px;
 		text-align: center;
 		margin-bottom: 2rem;
-		box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	}
 	.balance {
 		font-size: 3rem;
@@ -69,7 +69,8 @@
 		width: 100%;
 		border-collapse: collapse;
 	}
-	th, td {
+	th,
+	td {
 		padding: 1rem;
 		border-bottom: 1px solid #eee;
 		text-align: left;
@@ -77,6 +78,12 @@
 	th {
 		background-color: #f8f9fa;
 	}
-	.positive { color: #28a745; font-weight: bold; }
-	.negative { color: #dc3545; font-weight: bold; }
+	.positive {
+		color: #28a745;
+		font-weight: bold;
+	}
+	.negative {
+		color: #dc3545;
+		font-weight: bold;
+	}
 </style>

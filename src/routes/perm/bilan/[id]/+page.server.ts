@@ -10,18 +10,22 @@ export const load = async ({ locals, params }) => {
 	if (isNaN(permId)) throw error(400, 'Invalid ID');
 
 	// Perm Details
-	const permRes = await getPool().query(`
+	const permRes = (await getPool().query(
+		`
 		SELECT p.id, p.datee, p.total_vente, p.total_litre, np.nom
 		FROM perm p
 		JOIN nom_perm np ON p.id_nom_perm = np.id
 		WHERE p.id = ?
-	`, [permId]) as any[];
+	`,
+		[permId]
+	)) as any[];
 
 	if (permRes.length === 0) throw error(404, 'Perm not found');
 	const perm = permRes[0];
 
 	// Drinks Sales (B)
-	const drinks = await getPool().query(`
+	const drinks = (await getPool().query(
+		`
 		SELECT 
 			SUM(t.nb) as nb, 
 			SUM(ABS(t.prix)) as total_prix, 
@@ -36,10 +40,13 @@ export const load = async ({ locals, params }) => {
 		WHERE t.id_perm = ? AND t.B_C_A = 'B'
 		GROUP BY t.id_B_C
 		ORDER BY nb DESC
-	`, [permId]) as any[];
+	`,
+		[permId]
+	)) as any[];
 
 	// Free Drinks (F)
-	const freeDrinks = await getPool().query(`
+	const freeDrinks = (await getPool().query(
+		`
 		SELECT 
 			SUM(t.nb) as nb, 
 			SUM(ABS(t.prix)) as total_prix, 
@@ -52,10 +59,13 @@ export const load = async ({ locals, params }) => {
 		WHERE t.id_perm = ? AND t.B_C_A = 'F'
 		GROUP BY t.id_B_C
 		ORDER BY nb DESC
-	`, [permId]) as any[];
+	`,
+		[permId]
+	)) as any[];
 
 	// Snacks (C)
-	const snacks = await getPool().query(`
+	const snacks = (await getPool().query(
+		`
 		SELECT 
 			SUM(t.nb) as nb, 
 			SUM(ABS(t.prix)) as total_prix, 
@@ -65,7 +75,9 @@ export const load = async ({ locals, params }) => {
 		WHERE t.id_perm = ? AND t.B_C_A = 'C'
 		GROUP BY t.id_B_C
 		ORDER BY nb DESC
-	`, [permId]) as any[];
+	`,
+		[permId]
+	)) as any[];
 
 	return {
 		perm: {

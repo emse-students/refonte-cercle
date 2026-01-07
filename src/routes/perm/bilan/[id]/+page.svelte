@@ -6,8 +6,10 @@
 	}
 
 	function formatDate(date: Date) {
-		return new Intl.DateTimeFormat('fr-FR', { 
-			day: '2-digit', month: '2-digit', year: '2-digit'
+		return new Intl.DateTimeFormat('fr-FR', {
+			day: '2-digit',
+			month: '2-digit',
+			year: '2-digit'
 		}).format(date);
 	}
 </script>
@@ -106,18 +108,18 @@
 		max-width: 800px;
 		margin: 0 auto;
 	}
-	
+
 	.header {
 		text-align: center;
 		margin-bottom: 30px;
 	}
-	
+
 	.summary {
 		display: flex;
 		gap: 20px;
 		margin-bottom: 30px;
 	}
-	
+
 	.card {
 		flex: 1;
 		background: #f8f9fa;
@@ -126,25 +128,26 @@
 		text-align: center;
 		border: 1px solid #ddd;
 	}
-	
+
 	.value {
 		font-size: 1.5em;
 		font-weight: bold;
 		color: #333;
 	}
-	
+
 	.table {
 		width: 100%;
 		border-collapse: collapse;
 		margin-bottom: 30px;
 	}
-	
-	.table th, .table td {
+
+	.table th,
+	.table td {
 		padding: 10px;
 		text-align: left;
 		border-bottom: 1px solid #eee;
 	}
-	
+
 	h2 {
 		margin-top: 20px;
 		border-bottom: 2px solid #eee;

@@ -6,7 +6,7 @@ export const load = async ({ locals }) => {
 		throw error(403, 'Unauthorized');
 	}
 
-	const perms = await getPool().query(`
+	const perms = (await getPool().query(`
 		SELECT 
 			p.id, 
 			p.datee, 
@@ -17,10 +17,10 @@ export const load = async ({ locals }) => {
 		JOIN nom_perm np ON p.id_nom_perm = np.id
 		ORDER BY p.id DESC
 		LIMIT 50
-	`) as any[];
+	`)) as any[];
 
 	return {
-		perms: perms.map(p => ({
+		perms: perms.map((p) => ({
 			...p,
 			date: new Date(p.datee * 1000)
 		}))

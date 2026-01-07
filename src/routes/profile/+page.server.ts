@@ -14,11 +14,11 @@ export const load = async ({ locals }) => {
 	// Join with perm to get date? Transaction has datee.
 	// Join with boisson/consommable to get names.
 	// This is complex because of the polymorphic association (id_B_C + B_C_A).
-	
+
 	// We can use a UNION or multiple left joins.
 	// Legacy uses separate queries or complex joins.
 	// Let's try a LEFT JOIN approach.
-	
+
 	const transactions = await db`
 		SELECT 
 			t.id,

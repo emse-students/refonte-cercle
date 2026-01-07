@@ -1,14 +1,13 @@
 import { error, redirect } from '@sveltejs/kit';
-import { query } from '$lib/server/db';
+import { getPool } from '$lib/server/db';
 
 export const load = async ({ locals }) => {
-	const session = await locals.auth();
-	if (!session?.user || (session.user.droit !== 'cercle' && session.user.droit !== 'cercleux')) {
+	if (!locals?.user || (locals.user.droit !== 'cercle' && locals.user.droit !== 'cercleux')) {
 		throw error(403, 'Unauthorized');
 	}
 
 	// Fetch Drinks
-	const drinks = await query(`
+	const drinks = (await getPool().query(`
 		SELECT 
 			b.id, 
 			b.prix_vente, 
@@ -19,10 +18,10 @@ export const load = async ({ locals }) => {
 		JOIN contenu cu ON b.id_contenu = cu.id
 		JOIN contenant ct ON b.id_contenant = ct.id
 		ORDER BY cu.nom ASC
-	`) as any[];
+	`)) as any[];
 
 	// Fetch Snacks
-	const snacks = await query(`
+	const snacks = (await getPool().query(`
 		SELECT 
 			c.id, 
 			c.nom, 
@@ -30,18 +29,17 @@ export const load = async ({ locals }) => {
 			c.prix_achat
 		FROM consommable c
 		ORDER BY c.nom ASC
-	`) as any[];
+	`)) as any[];
 
 	return {
-		drinks: drinks.map(d => ({ ...d, type: 'B', name: `${d.nom_contenu} ${d.nom_contenant}` })),
-		snacks: snacks.map(s => ({ ...s, type: 'C', name: s.nom }))
+		drinks: drinks.map((d) => ({ ...d, type: 'B', name: `${d.nom_contenu} ${d.nom_contenant}` })),
+		snacks: snacks.map((s) => ({ ...s, type: 'C', name: s.nom }))
 	};
 };
 
 export const actions = {
 	updatePrice: async ({ request, locals }) => {
-		const session = await locals.auth();
-		if (!session?.user || (session.user.droit !== 'cercle' && session.user.droit !== 'cercleux')) {
+		if (!locals?.user || (locals.user.droit !== 'cercle' && locals.user.droit !== 'cercleux')) {
 			throw error(403, 'Unauthorized');
 		}
 
@@ -55,9 +53,9 @@ export const actions = {
 		}
 
 		if (type === 'B') {
-			await query('UPDATE boisson SET prix_vente = ? WHERE id = ?', [price, id]);
+			await getPool().query('UPDATE boisson SET prix_vente = ? WHERE id = ?', [price, id]);
 		} else if (type === 'C') {
-			await query('UPDATE consommable SET prix_vente = ? WHERE id = ?', [price, id]);
+			await getPool().query('UPDATE consommable SET prix_vente = ? WHERE id = ?', [price, id]);
 		}
 
 		return { success: true };

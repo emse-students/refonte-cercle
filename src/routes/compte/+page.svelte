@@ -8,9 +8,12 @@
 	}
 
 	function formatDate(date: Date) {
-		return new Intl.DateTimeFormat('fr-FR', { 
-			day: '2-digit', month: '2-digit', year: '2-digit', 
-			hour: '2-digit', minute: '2-digit' 
+		return new Intl.DateTimeFormat('fr-FR', {
+			day: '2-digit',
+			month: '2-digit',
+			year: '2-digit',
+			hour: '2-digit',
+			minute: '2-digit'
 		}).format(date);
 	}
 </script>
@@ -19,7 +22,10 @@
 	{#if data.targetUser}
 		<h1>Compte de {data.targetUser.prenom} {data.targetUser.nom}</h1>
 		<div class="info-box">
-			<p><strong>Solde:</strong> <span class:negative={data.targetUser.solde < 0}>{formatPrice(data.targetUser.solde)}</span></p>
+			<p>
+				<strong>Solde:</strong>
+				<span class:negative={data.targetUser.solde < 0}>{formatPrice(data.targetUser.solde)}</span>
+			</p>
 			<p><strong>Promo:</strong> {data.targetUser.promo}</p>
 			<p><strong>Login:</strong> {data.targetUser.login}</p>
 		</div>
@@ -79,12 +85,17 @@
 		border-collapse: collapse;
 	}
 
-	.transactions th, .transactions td {
+	.transactions th,
+	.transactions td {
 		padding: 10px;
 		text-align: left;
 		border-bottom: 1px solid #eee;
 	}
 
-	.negative { color: red; }
-	.positive { color: green; }
+	.negative {
+		color: red;
+	}
+	.positive {
+		color: green;
+	}
 </style>

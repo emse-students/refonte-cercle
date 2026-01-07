@@ -13,4 +13,3 @@
 	<Header user={data.user} />
 	{@render children()}
 </div>
-

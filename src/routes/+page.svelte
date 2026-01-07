@@ -7,7 +7,7 @@
 	{#if data.user}
 		<div class="dashboard">
 			<h1>Welcome, {data.user.prenom}!</h1>
-			
+
 			<div class="grid">
 				<a href="/profile" class="card profile">
 					<h2>My Profile</h2>
@@ -82,11 +82,13 @@
 		border-radius: 8px;
 		text-decoration: none;
 		color: inherit;
-		transition: transform 0.2s, box-shadow 0.2s;
+		transition:
+			transform 0.2s,
+			box-shadow 0.2s;
 	}
 	.card:hover {
 		transform: translateY(-5px);
-		box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+		box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 	}
 	.card h2 {
 		margin-top: 0;
@@ -96,9 +98,19 @@
 		color: #666;
 		margin-bottom: 0;
 	}
-	.profile { border-left: 5px solid #17a2b8; }
-	.pos { border-left: 5px solid #28a745; }
-	.action { border-left: 5px solid #ffc107; }
-	.admin { border-left: 5px solid #dc3545; }
-	.stats { border-left: 5px solid #6610f2; }
+	.profile {
+		border-left: 5px solid #17a2b8;
+	}
+	.pos {
+		border-left: 5px solid #28a745;
+	}
+	.action {
+		border-left: 5px solid #ffc107;
+	}
+	.admin {
+		border-left: 5px solid #dc3545;
+	}
+	.stats {
+		border-left: 5px solid #6610f2;
+	}
 </style>

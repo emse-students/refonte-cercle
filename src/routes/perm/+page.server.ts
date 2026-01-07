@@ -7,8 +7,10 @@ export const load = async ({ locals }) => {
 	}
 
 	// Get active perm
-	const perms = await getPool().query('SELECT p.id, np.nom, p.datee, p.total_vente FROM perm p JOIN nom_perm np ON p.id_nom_perm = np.id ORDER BY p.id DESC LIMIT 1') as any[];
-	
+	const perms = (await getPool().query(
+		'SELECT p.id, np.nom, p.datee, p.total_vente FROM perm p JOIN nom_perm np ON p.id_nom_perm = np.id ORDER BY p.id DESC LIMIT 1'
+	)) as any[];
+
 	if (perms.length === 0) {
 		return { perm: null };
 	}
@@ -16,7 +18,8 @@ export const load = async ({ locals }) => {
 	const perm = perms[0];
 
 	// Fetch last 10 transactions for this perm
-	const history = await getPool().query(`
+	const history = (await getPool().query(
+		`
 		SELECT 
 			t.id, t.nb, t.prix, t.B_C_A, t.id_B_C,
 			u.prenom, u.nom,
@@ -31,7 +34,9 @@ export const load = async ({ locals }) => {
 		WHERE t.id_perm = ?
 		ORDER BY t.datee DESC
 		LIMIT 10
-	`, [perm.id]) as any[];
+	`,
+		[perm.id]
+	)) as any[];
 
 	return {
 		perm,

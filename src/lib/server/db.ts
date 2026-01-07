@@ -1,6 +1,5 @@
-import { createPool, type Pool, type RowDataPacket } from "mysql2/promise";
-import { env } from "$env/dynamic/private";
-
+import { createPool, type Pool, type RowDataPacket } from 'mysql2/promise';
+import { env } from '$env/dynamic/private';
 
 let pool: Pool | null = null;
 
@@ -12,7 +11,7 @@ function ensurePool() {
 			password: env.DB_PASSWORD,
 			database: env.DB_NAME,
 			port: Number(env.DB_PORT) || 3306,
-			connectionLimit: 10,
+			connectionLimit: 10
 		});
 	}
 }
@@ -21,7 +20,7 @@ export default async function db<T = RowDataPacket>(
 	strings: TemplateStringsArray,
 	...values: unknown[]
 ) {
-	const query = strings.reduce((prev, curr, i) => prev + curr + (i < values.length ? "?" : ""), "");
+	const query = strings.reduce((prev, curr, i) => prev + curr + (i < values.length ? '?' : ''), '');
 	const rows = (await getPool().query<RowDataPacket[]>(query, values))[0];
 	return rows as T[];
 }
@@ -31,4 +30,4 @@ export function getPool(): Pool {
 	return pool as Pool;
 }
 
-export { escape } from "mysql2/promise";
+export { escape } from 'mysql2/promise';

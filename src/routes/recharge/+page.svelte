@@ -6,11 +6,12 @@
 	let selectedUser = $state<any>(null);
 
 	let filteredUsers = $derived(
-		searchQuery.length > 1 
-			? data.users.filter((u: any) => 
-				u.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-				u.login.includes(searchQuery)
-			)
+		searchQuery.length > 1
+			? data.users.filter(
+					(u: any) =>
+						u.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+						u.login.includes(searchQuery)
+				)
 			: []
 	);
 
@@ -38,15 +39,15 @@
 		{#if !selectedUser}
 			<div class="search-section">
 				<label for="search">Client :</label>
-				<input 
-					type="text" 
+				<input
+					type="text"
 					id="search"
-					placeholder="Tapez le nom du client" 
+					placeholder="Tapez le nom du client"
 					bind:value={searchQuery}
 					class="search-input"
 					autocomplete="off"
 				/>
-				
+
 				{#if filteredUsers.length > 0}
 					<ul class="results">
 						{#each filteredUsers as user}
@@ -64,26 +65,53 @@
 				<h2>Client : {selectedUser.name}</h2>
 				<p>Solde actuel : <strong>{selectedUser.solde.toFixed(2)} €</strong></p>
 
-				<form method="POST" use:enhance={() => {
-					return async ({ update, result }) => {
-						await update();
-						if (result.type === 'success') {
-							reset();
-						}
-					};
-				}}>
+				<form
+					method="POST"
+					use:enhance={() => {
+						return async ({ update, result }) => {
+							await update();
+							if (result.type === 'success') {
+								reset();
+							}
+						};
+					}}
+				>
 					<input type="hidden" name="userId" value={selectedUser.id_user} />
-					
+
 					<div class="form-group">
 						<label for="amount">Montant (€) :</label>
-						<input type="number" step="0.01" name="amount" id="amount" required min="0.01" class="amount-input" />
+						<input
+							type="number"
+							step="0.01"
+							name="amount"
+							id="amount"
+							required
+							min="0.01"
+							class="amount-input"
+						/>
 					</div>
 
 					<div class="quick-amounts">
-						<button type="button" onclick={() => (document.getElementById('amount') as HTMLInputElement).value = '5'}>5 €</button>
-						<button type="button" onclick={() => (document.getElementById('amount') as HTMLInputElement).value = '10'}>10 €</button>
-						<button type="button" onclick={() => (document.getElementById('amount') as HTMLInputElement).value = '20'}>20 €</button>
-						<button type="button" onclick={() => (document.getElementById('amount') as HTMLInputElement).value = '50'}>50 €</button>
+						<button
+							type="button"
+							onclick={() => ((document.getElementById('amount') as HTMLInputElement).value = '5')}
+							>5 €</button
+						>
+						<button
+							type="button"
+							onclick={() => ((document.getElementById('amount') as HTMLInputElement).value = '10')}
+							>10 €</button
+						>
+						<button
+							type="button"
+							onclick={() => ((document.getElementById('amount') as HTMLInputElement).value = '20')}
+							>20 €</button
+						>
+						<button
+							type="button"
+							onclick={() => ((document.getElementById('amount') as HTMLInputElement).value = '50')}
+							>50 €</button
+						>
 					</div>
 
 					<div class="actions">
@@ -106,7 +134,7 @@
 		background: #f8f9fa;
 		padding: 2rem;
 		border-radius: 8px;
-		box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 		min-height: 300px;
 	}
 	.search-input {
@@ -185,6 +213,12 @@
 		border-radius: 4px;
 		text-align: center;
 	}
-	.success { background: #d4edda; color: #155724; }
-	.error { background: #f8d7da; color: #721c24; }
+	.success {
+		background: #d4edda;
+		color: #155724;
+	}
+	.error {
+		background: #f8d7da;
+		color: #721c24;
+	}
 </style>

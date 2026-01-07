@@ -5,7 +5,7 @@
 <div class="container">
 	{#if data.isUserStats}
 		<h1>Statistics for {data.user.prenom} {data.user.nom}</h1>
-		
+
 		<div class="chart-section">
 			<h2>Consumption by Type</h2>
 			<table>
@@ -100,7 +100,7 @@
 		padding: 2rem;
 		border-radius: 8px;
 		text-align: center;
-		box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	}
 	.stat-card h2 {
 		margin-top: 0;
@@ -117,7 +117,8 @@
 		width: 100%;
 		border-collapse: collapse;
 	}
-	th, td {
+	th,
+	td {
 		padding: 1rem;
 		border-bottom: 1px solid #eee;
 		text-align: left;

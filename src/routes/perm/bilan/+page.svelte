@@ -6,15 +6,17 @@
 	}
 
 	function formatDate(date: Date) {
-		return new Intl.DateTimeFormat('fr-FR', { 
-			day: '2-digit', month: '2-digit', year: '2-digit'
+		return new Intl.DateTimeFormat('fr-FR', {
+			day: '2-digit',
+			month: '2-digit',
+			year: '2-digit'
 		}).format(date);
 	}
 </script>
 
 <div class="page">
 	<h1>Bilan des perms</h1>
-	
+
 	<div class="list">
 		{#each data.perms as perm}
 			<a href="/perm/bilan/{perm.id}" class="perm-item">
@@ -37,13 +39,13 @@
 		max-width: 800px;
 		margin: 0 auto;
 	}
-	
+
 	.list {
 		display: flex;
 		flex-direction: column;
 		gap: 10px;
 	}
-	
+
 	.perm-item {
 		display: flex;
 		justify-content: space-between;
@@ -56,36 +58,36 @@
 		color: inherit;
 		transition: background 0.2s;
 	}
-	
+
 	.perm-item:hover {
 		background: #e9ecef;
 	}
-	
+
 	.left {
 		display: flex;
 		flex-direction: column;
 	}
-	
+
 	.name {
 		font-weight: bold;
 		font-size: 1.1em;
 	}
-	
+
 	.date {
 		color: #666;
 		font-size: 0.9em;
 	}
-	
+
 	.right {
 		text-align: right;
 	}
-	
+
 	.price {
 		display: block;
 		font-weight: bold;
 		color: green;
 	}
-	
+
 	.volume {
 		color: #666;
 		font-size: 0.9em;

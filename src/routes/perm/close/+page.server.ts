@@ -3,14 +3,15 @@ import db from '$lib/server/db';
 
 export const load = async ({ locals }) => {
 	if (!locals.user) throw redirect(302, '/');
-	
+
 	if (locals.user.droit !== 'cercle' && locals.user.droit !== 'cercleux') {
 		throw error(403, 'Unauthorized');
 	}
 
 	// Get latest perm
-	const perms = await db`SELECT p.id, np.nom, p.datee FROM perm p JOIN nom_perm np ON p.id_nom_perm = np.id ORDER BY p.id DESC LIMIT 1`;
-	
+	const perms =
+		await db`SELECT p.id, np.nom, p.datee FROM perm p JOIN nom_perm np ON p.id_nom_perm = np.id ORDER BY p.id DESC LIMIT 1`;
+
 	if (perms.length === 0) {
 		return { perm: null, stats: [] };
 	}
@@ -21,7 +22,7 @@ export const load = async ({ locals }) => {
 	// Aggregate Sales
 	// We can combine the queries or keep them separate.
 	// Let's try to combine B and F since they join the same tables.
-	
+
 	const drinks = await db`
 		SELECT 
 			o.B_C_A as type,
@@ -54,7 +55,7 @@ export const load = async ({ locals }) => {
 	`;
 
 	// Process data to match the view needs
-	const stats = [...drinks, ...snacks].map(item => {
+	const stats = [...drinks, ...snacks].map((item) => {
 		let nom = '';
 		let volume = 0;
 

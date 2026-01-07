@@ -5,7 +5,8 @@ export const load = async ({ locals }) => {
 	if (!locals.user) throw redirect(302, '/');
 
 	// Get active perm
-	const perms = await db`SELECT p.id, np.nom FROM perm p JOIN nom_perm np ON p.id_nom_perm = np.id ORDER BY p.id DESC LIMIT 1`;
+	const perms =
+		await db`SELECT p.id, np.nom FROM perm p JOIN nom_perm np ON p.id_nom_perm = np.id ORDER BY p.id DESC LIMIT 1`;
 	if (perms.length === 0) {
 		throw redirect(302, '/perm/open');
 	}
@@ -42,20 +43,21 @@ export const load = async ({ locals }) => {
 	`;
 
 	// Users (Lightweight list for search)
-	// We might want to fetch this via an API endpoint if the list is huge, 
+	// We might want to fetch this via an API endpoint if the list is huge,
 	// but for now let's load it.
-	const users = await db`SELECT id_user, login, prenom, nom, solde FROM user WHERE droit <> "aucun" ORDER BY nom ASC`;
+	const users =
+		await db`SELECT id_user, login, prenom, nom, solde FROM user WHERE droit <> "aucun" ORDER BY nom ASC`;
 
 	return {
 		perm,
-		drinks: drinks.map(d => ({ 
-			...d, 
-			type: 'B', 
+		drinks: drinks.map((d) => ({
+			...d,
+			type: 'B',
 			name: `${d.nom_contenu} ${d.nom_contenant}`,
 			volume: d.type_contenant === 'bouteille_unique' ? d.capacite : 0.25
 		})),
-		snacks: snacks.map(s => ({ ...s, type: 'C', name: s.nom })),
-		users: users.map(u => ({ ...u, name: `${u.prenom} ${u.nom}` }))
+		snacks: snacks.map((s) => ({ ...s, type: 'C', name: s.nom })),
+		users: users.map((u) => ({ ...u, name: `${u.prenom} ${u.nom}` }))
 	};
 };
 
@@ -77,18 +79,24 @@ export const actions = {
 			return { success: false, message: 'Cart is empty' };
 		}
 
-		const totalAmount = cart.reduce((sum: number, item: any) => sum + (item.price * item.quantity), 0);
+		const totalAmount = cart.reduce(
+			(sum: number, item: any) => sum + item.price * item.quantity,
+			0
+		);
 
 		// Execute Transaction
 		const connection = await getPool().getConnection();
-		
+
 		try {
 			await connection.beginTransaction();
 
 			// 1. Update User Balance
-			// Check balance first? Legacy allows negative balance? 
+			// Check balance first? Legacy allows negative balance?
 			// "solde_negatif" variable in get_users.php suggests yes.
-			await connection.execute('UPDATE user SET solde = solde - ? WHERE id_user = ?', [totalAmount, userId]);
+			await connection.execute('UPDATE user SET solde = solde - ? WHERE id_user = ?', [
+				totalAmount,
+				userId
+			]);
 
 			// 2. Insert Transactions
 			const datee = Math.floor(Date.now() / 1000);
@@ -96,17 +104,17 @@ export const actions = {
 
 			for (const item of cart) {
 				// item: { id, type ('B' or 'C'), price, quantity, volume (if B) }
-				
+
 				await connection.execute(
 					'INSERT INTO transaction (id_user, id_cercle, id_perm, B_C_A, id_B_C, datee, nb, prix) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
 					[userId, bartenderId, permId, item.type, item.id, datee, item.quantity, -item.price]
 				);
 
 				if (item.type === 'B' && item.volume) {
-					await connection.execute(
-						'UPDATE perm SET total_litre = total_litre + ? WHERE id = ?',
-						[item.volume * item.quantity, permId]
-					);
+					await connection.execute('UPDATE perm SET total_litre = total_litre + ? WHERE id = ?', [
+						item.volume * item.quantity,
+						permId
+					]);
 				}
 			}
 

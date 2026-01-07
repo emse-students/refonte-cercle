@@ -58,7 +58,8 @@
 		border-collapse: collapse;
 		margin-top: 1rem;
 	}
-	th, td {
+	th,
+	td {
 		padding: 0.75rem;
 		border-bottom: 1px solid #ddd;
 		text-align: left;

@@ -6,14 +6,7 @@ export const load = async ({ locals }) => {
 		throw error(403, 'Unauthorized');
 	}
 
-	const [
-		contenusRaw,
-		contenants,
-		users,
-		nomPerms,
-		permMembers,
-		constantes
-	] = await Promise.all([
+	const [contenusRaw, contenants, users, nomPerms, permMembers, constantes] = await Promise.all([
 		getPool().query(`
 			SELECT 
 				c.id, c.nom, c.type, c.degre, c.description,
@@ -25,8 +18,12 @@ export const load = async ({ locals }) => {
 			ORDER BY c.nom
 		`),
 		getPool().query('SELECT * FROM contenant ORDER BY nom'),
-		getPool().query('SELECT id_user as id, nom, prenom, login, droit, solde, promo, type FROM user ORDER BY nom'),
-		getPool().query('SELECT id, nom, annee FROM nom_perm WHERE id <> 1 AND isactiv = 1 ORDER BY nom'),
+		getPool().query(
+			'SELECT id_user as id, nom, prenom, login, droit, solde, promo, type FROM user ORDER BY nom'
+		),
+		getPool().query(
+			'SELECT id, nom, annee FROM nom_perm WHERE id <> 1 AND isactiv = 1 ORDER BY nom'
+		),
 		getPool().query(`
 			SELECT mp.id_nom_perm, u.id_user, u.prenom, u.nom, u.login 
 			FROM user u 
@@ -37,7 +34,7 @@ export const load = async ({ locals }) => {
 
 	// Group contenus
 	const contenusMap = new Map();
-	(contenusRaw as any[]).forEach(row => {
+	(contenusRaw as any[]).forEach((row) => {
 		if (!contenusMap.has(row.id)) {
 			contenusMap.set(row.id, {
 				id: row.id,
@@ -64,10 +61,10 @@ export const load = async ({ locals }) => {
 
 	// Group perm members
 	const permsMap = new Map();
-	(nomPerms as any[]).forEach(p => {
+	(nomPerms as any[]).forEach((p) => {
 		permsMap.set(p.id, { ...p, membres: [] });
 	});
-	(permMembers as any[]).forEach(m => {
+	(permMembers as any[]).forEach((m) => {
 		if (permsMap.has(m.id_nom_perm)) {
 			permsMap.get(m.id_nom_perm).membres.push({
 				id: m.id_user,
@@ -99,7 +96,10 @@ export const actions = {
 		if (!nom) return { success: false, message: 'Name required' };
 
 		const annee = new Date().getFullYear();
-		await getPool().query('INSERT INTO nom_perm (nom, annee, isactiv) VALUES (?, ?, 1)', [nom, annee]);
+		await getPool().query('INSERT INTO nom_perm (nom, annee, isactiv) VALUES (?, ?, 1)', [
+			nom,
+			annee
+		]);
 
 		return { success: true };
 	}
